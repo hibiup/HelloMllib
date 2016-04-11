@@ -1,0 +1,49 @@
+allprojects {
+    apply plugin: 'idea'
+    apply plugin: 'eclipse'
+    apply plugin: 'java'
+    apply plugin: 'scala'
+
+    group 'com.wang.hello'
+    version '0.0.1-SNAPSHOT'
+
+// In this section you declare where to find the dependencies of your project
+    repositories {
+        jcenter()
+        mavenCentral()
+        maven {
+            name 'internal'
+            url 'http://mvn.int.htche.com/archiva/repository/internal/'
+        }
+    }
+
+    configurations {
+        provided
+        compile.extendsFrom provided
+    }
+
+    sourceSets {
+        main {
+            compileClasspath += configurations.provided
+        }
+    }
+
+    ext {
+        scalaMajorVersion = '2.10'
+        scalaMinalVersion = '5'
+        scalaTestVersion = '2.1.3'
+        sparkVersion = '1.6.1'
+        hadoopClientVersion = '2.2.0'
+        log4jVersion = '1.2.17'
+        junitVersion = '4.11'
+    }
+
+    dependencies {
+        compile ("org.scala-lang:scala-library:${scalaMajorVersion}.${scalaMinalVersion}")
+        compile "org.scala-lang:scala-actors:${scalaMajorVersion}.${scalaMinalVersion}"
+        //compile "org.scala-lang:scala-parser-combinators:2.11.0-M4"
+
+        testCompile "org.scalatest:scalatest_${scalaMajorVersion}:${scalaTestVersion}"
+        testCompile group: 'junit', name: 'junit', version: "${junitVersion}"
+    }
+}
