@@ -41,6 +41,8 @@ allprojects {
     dependencies {
         compile ("org.scala-lang:scala-library:${scalaMajorVersion}.${scalaMinalVersion}")
         compile "org.scala-lang:scala-actors:${scalaMajorVersion}.${scalaMinalVersion}"
+        compile "org.apache.spark:spark-mllib_${scalaMajorVersion}:${sparkVersion}"
+        compile "com.github.fommil.netlib:all:1.1.2"
         //compile "org.scala-lang:scala-parser-combinators:2.11.0-M4"
 
         testCompile "org.scalatest:scalatest_${scalaMajorVersion}:${scalaTestVersion}"
