@@ -1,9 +1,10 @@
-false,9.0
-false,8.0
-false,7.0
-false,6.0
-false,5.0
-false,4.0
-false,3.0
-false,2.0
-false,1.0
+true, 2.81
+true, 4.21
+false, 6.17
+false, 6.27
+false, 5.35
+true, 2.14
+true, 3.47
+true, 3.82
+false, 3.91
+false, 5.69

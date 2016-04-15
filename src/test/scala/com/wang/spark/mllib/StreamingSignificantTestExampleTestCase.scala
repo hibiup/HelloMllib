@@ -9,10 +9,20 @@ import org.scalatest.junit.JUnitRunner
   */
 @RunWith(classOf[JUnitRunner])
 class StreamingSignificantTestExampleTestCase extends FunSuite{
-    test("streaming significant test") {
+    test("file streaming test") {
         val testDataDir = "hdfs://hadoop:9000/user/root/spark/streaming/significantTest"
 
         val streamingTest:StreamingSignificantTestExample = new StreamingSignificantTestExample()
-        streamingTest.test(testDataDir)
+        streamingTest.test(streamingTest.fileStreamingData(testDataDir), 0)
+    }
+
+    test("random data streaming test") {
+        val streamingTest:StreamingSignificantTestExample = new StreamingSignificantTestExample()
+        streamingTest.test(streamingTest.randomData(), 20)
+    }
+
+    test("test get data") {
+        val streamingTest:StreamingSignificantTestExample = new StreamingSignificantTestExample()
+        println(streamingTest.randomData())
     }
 }
