@@ -18,7 +18,7 @@ class StreamingSignificantTestExampleTestCase extends FunSuite{
 
     test("random data streaming test") {
         val streamingTest:StreamingSignificantTestExample = new StreamingSignificantTestExample()
-        streamingTest.test(streamingTest.randomData(), 20)
+        streamingTest.test(streamingTest.randomData(), 0)
     }
 
     test("test get data") {

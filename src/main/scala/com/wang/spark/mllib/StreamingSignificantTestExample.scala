@@ -4,12 +4,15 @@ package com.wang.spark.mllib
   * Created by root on 4/14/16.
   */
 
+import org.apache.log4j.Logger
 import org.apache.spark.SparkConf
 import org.apache.spark.mllib.stat.test.{BinarySample, StreamingTest}
 import org.apache.spark.streaming.dstream.DStream
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 
 class StreamingSignificantTestExample {
+    val logger = Logger.getLogger(this.getClass)
+
     val batchDuration = Seconds(5)
     val numBatchesTimeout = 2
     val checkpoint = "/tmp/spark/checkpoint"
@@ -24,7 +27,24 @@ class StreamingSignificantTestExample {
         dir.toString
     })
 
-    def test(data: DStream[BinarySample], windowSize:Int) {
+    def test(data: DStream[BinarySample], windowSize: Int) {
+        import scala.util.control.Exception._
+        import org.apache.commons.math3.exception.NumberIsTooSmallException
+        catching(classOf[NumberIsTooSmallException])
+            .andFinally(
+                println("how can I close the stream ?")
+            )
+            .either(
+                println("either")
+            ) match {
+            case e:Exception =>
+                logger.error(e.getMessage, e)
+            case Left(e) =>
+                logger.error(e.getMessage, e)
+            case Right(v) => v
+            case _ => _
+        }
+
         // $example on$
         val streamingTest = new StreamingTest()
             .setPeacePeriod(0)
@@ -41,15 +61,20 @@ class StreamingSignificantTestExample {
                 val anySignificant = rdd.map(_.pValue < 0.05).fold(false)(_ || _)
                 if (anySignificant) {
                     rdd.context.stop()
-                    System.exit(0)
+                    //System.exit(0)
                 }
             }
         }
 
         // Start
         ssc.start()
-        // until termination signal received.
-        ssc.awaitTermination()
+        try {
+            // until termination signal received.
+            ssc.awaitTermination()
+        }
+        catch {
+            case e => logger.error(e.getMessage, e)
+        }
     }
 
     def fileStreamingData(input: String): DStream[BinarySample] = {
@@ -63,7 +88,7 @@ class StreamingSignificantTestExample {
 
     def randomData(): DStream[BinarySample] = {
         import akka.actor.Props
-        val lines:DStream[BinarySample] = ssc.actorStream(Props(new CustomActor()), "CustomReceiver")
+        val lines: DStream[BinarySample] = ssc.actorStream(Props(new CustomActor()), "CustomReceiver")
         lines
     }
 
@@ -87,7 +112,9 @@ import akka.actor.Actor
 import org.apache.spark.streaming.receiver.ActorHelper
 
 class CustomActor extends Actor with ActorHelper {
+
     import scala.util.Random
+
     /*(1 to 5000).foreach {
         i => {
             val experiment = Random.nextBoolean
@@ -101,7 +128,8 @@ class CustomActor extends Actor with ActorHelper {
 
     import scala.concurrent.duration._
     import scala.concurrent.ExecutionContext.Implicits.global
-    context.system.scheduler.schedule(1 seconds, 500 millis) {
+
+    context.system.scheduler.schedule(2 seconds, 500 millis) {
         val experiment = Random.nextBoolean
         val testData = BinarySample(experiment, experiment match {
             case true => Random.nextDouble
