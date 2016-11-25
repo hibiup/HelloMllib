@@ -60,10 +60,12 @@ class LinearRegressionExample {
     val data = sc.textFile(seedFile)
     val valuesAndPreds = data.map { line =>
       val prediction = model.predict(Vectors.dense(line.split(' ').map(_.toDouble)))
+      // line.toDouble*1000 是假定的真实售价，prediction 是预测值，返回这两个数字好做比较
       (line.toDouble*1000, prediction)
     }.cache()
 
     val MSE = valuesAndPreds.map{
+      // 计算差方
       case(v, p) => math.pow((v - p), 2)
     }.mean()
     println("training Mean Squared Error = " + MSE)
