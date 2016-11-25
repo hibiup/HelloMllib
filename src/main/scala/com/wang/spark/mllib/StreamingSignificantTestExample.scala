@@ -42,7 +42,6 @@ class StreamingSignificantTestExample {
             case Left(e) =>
                 logger.error(e.getMessage, e)
             case Right(v) => v
-            case _ => _
         }
 
         // $example on$
